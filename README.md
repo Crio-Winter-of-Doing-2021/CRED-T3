@@ -8,7 +8,4 @@ Team ID: CRED-T3 | Team Members: [Aayush Mathur](https://github.com/aayush-mathu
 `Frontend:` JavaScript, React
 
 `Backend:` Java, Spring Boot, MongoDB Atlas
-
-## Architecture
-<img src="https://storage.googleapis.com/crio-content-container-assets/ME_ME_CWOD_CRED_CARD_MODULE_ME_CWOD_CRED_CARD_MODULE_BASIC_image_4.png">
-
+ 
