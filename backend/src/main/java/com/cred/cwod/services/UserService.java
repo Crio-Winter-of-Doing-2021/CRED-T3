@@ -30,7 +30,10 @@ public class UserService implements BaseService {
   }
 
   private boolean isUserAlreadyExist(User user) {
-    return (userRepository.findByEmailAndUsername(user.getEmail(), user.getUsername()) != null);
+    // Username must be unique.
+
+    if (userRepository.findByUsername(user.getUsername()) != null) return true;
+    return userRepository.findByEmail(user.getEmail()) != null;
   }
 
   /**
