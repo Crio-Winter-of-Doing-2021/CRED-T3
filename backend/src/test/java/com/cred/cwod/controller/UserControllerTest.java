@@ -6,13 +6,11 @@ import com.cred.cwod.exchanges.LoginRequest;
 import com.cred.cwod.security.SecurityConstants;
 import com.cred.cwod.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -25,7 +23,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -44,7 +41,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @MockitoSettings(strictness = Strictness.STRICT_STUBS)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@TestPropertySource("file:backend/src/main/resources/application.properties")
 public class UserControllerTest {
 
   private String userId;
