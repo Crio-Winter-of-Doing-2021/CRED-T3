@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -29,10 +30,10 @@ public class UserController {
   private UserService userService;
 
   @ApiResponses({
-      @ApiResponse(code = 200, message = "OK", response = BaseResponse.class),
-      @ApiResponse(code = 400, message = "Validation Error"),
-      @ApiResponse(code = 500, message = "Server Error"),
-      @ApiResponse(code = 403, message = "Username & email already exist")
+      @ApiResponse(code = HttpServletResponse.SC_OK, message = "OK", response = BaseResponse.class),
+      @ApiResponse(code = HttpServletResponse.SC_BAD_REQUEST, message = "Validation Error"),
+      @ApiResponse(code = HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message = "Server Error"),
+      @ApiResponse(code = HttpServletResponse.SC_FORBIDDEN, message = "Username & email already exist")
   })
   @PostMapping(SIGNUP_URL)
   public ResponseEntity<BaseResponse<User>> signup(@Valid @RequestBody User user) {
@@ -49,10 +50,10 @@ public class UserController {
   }
 
   @ApiResponses({
-      @ApiResponse(code = 200, message = "OK"),
-      @ApiResponse(code = 400, message = "Validation Error"),
-      @ApiResponse(code = 500, message = "Server Error"),
-      @ApiResponse(code = 403, message = "Incorrect Credentials")
+      @ApiResponse(code = HttpServletResponse.SC_OK, message = "OK"),
+      @ApiResponse(code = HttpServletResponse.SC_BAD_REQUEST, message = "Validation Error"),
+      @ApiResponse(code = HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message = "Server Error"),
+      @ApiResponse(code = HttpServletResponse.SC_FORBIDDEN, message = "Incorrect Credentials")
   })
   @PostMapping(LOGIN_URL)
   public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) {
@@ -66,10 +67,10 @@ public class UserController {
   }
 
   @ApiResponses({
-      @ApiResponse(code = 200, message = "OK", response = BaseResponse.class),
-      @ApiResponse(code = 400, message = "Validation Error"),
-      @ApiResponse(code = 500, message = "Server Error"),
-      @ApiResponse(code = 403, message = "Incorrect Credentials")
+      @ApiResponse(code = HttpServletResponse.SC_OK, message = "OK", response = BaseResponse.class),
+      @ApiResponse(code = HttpServletResponse.SC_BAD_REQUEST, message = "Validation Error"),
+      @ApiResponse(code = HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message = "Server Error"),
+      @ApiResponse(code = HttpServletResponse.SC_FORBIDDEN, message = "Incorrect Credentials")
   })
   @GetMapping(GET_ID + "/{username}")
   public ResponseEntity<BaseResponse<String>> getUserId(@PathVariable String username) {
