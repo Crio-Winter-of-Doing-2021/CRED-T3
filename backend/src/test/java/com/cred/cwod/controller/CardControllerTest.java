@@ -39,14 +39,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CardControllerTest {
 
   private final int portNumber = 8081;
+
   @Autowired
   private ObjectMapper mapper;
+
   @Autowired
   private MockMvc mvc;
+
   @Mock
   private CardService cardService;
+
   @InjectMocks
   private CardController cardController;
+
   private Card card;
 
   private List<Card> listOfCards;
