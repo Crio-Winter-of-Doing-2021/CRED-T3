@@ -1,9 +1,15 @@
 package com.cred.cwod.services;
 
 import com.cred.cwod.dto.Card;
+import com.cred.cwod.dto.CardStatement;
+import com.cred.cwod.dto.Transaction;
+import com.cred.cwod.exchanges.StatementRequest;
 import com.cred.cwod.repository.CardRepository;
+import com.cred.cwod.repository.TransactionRepository;
 import com.cred.cwod.repository.UserRepository;
 import com.cred.cwod.utils.Status;
+import com.cred.cwod.utils.TransactionType;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Log4j2
 public class CardService implements BaseService {
 
   @Autowired
@@ -19,6 +26,9 @@ public class CardService implements BaseService {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private TransactionRepository transactionRepository;
 
   public static boolean isValidCardNumber(String cardNumber) {
 
@@ -127,5 +137,63 @@ public class CardService implements BaseService {
       cards = cardRepository.findAllByUserId(userId);
     }
     return cards;
+  }
+
+  /**
+   * This method is used to update or add statements for a particular MM/YY
+   *
+   * @param id        - Card Id
+   * @param year      - Year of Statement
+   * @param month     - Month of Statement
+   * @param statement - Transaction details for the particular month
+   * @return - CardStatement
+   */
+  public CardStatement updateCardStatement(String id, String year, String month,
+                                           StatementRequest statement) {
+
+    if (!cardRepository.existsById(id)) {
+      log.error("In updateCardStatement: Card with id: {} not found!!", id);
+      return null;
+    }
+
+    CardStatement previousStatements = getCardStatement(id, year, month);
+    if (previousStatements != null) {
+      transactionRepository.delete(previousStatements);
+    }
+
+    Integer currentMonthBalance = 0;
+
+    for (Transaction t : statement.getTransactions()) {
+      if (t.getTransactionType().equals(TransactionType.DEBIT)) {
+        currentMonthBalance -= t.getAmount();
+      } else {
+        currentMonthBalance += t.getAmount();
+      }
+    }
+
+    CardStatement cardStatement = CardStatement.builder()
+        .cardId(id)
+        .transactions(statement.getTransactions())
+        .month(month)
+        .year(year)
+        .currentOutstanding(currentMonthBalance < 0 ? -1 * currentMonthBalance : 0)
+        .build();
+
+    transactionRepository.save(cardStatement);
+
+    return cardStatement;
+  }
+
+  /**
+   * Get the Transaction of a card for the specified MM/YY
+   *
+   * @param id    - Card Id
+   * @param year  - Year of statement
+   * @param month - Month of statement
+   * @return - CardStatement
+   */
+  public CardStatement getCardStatement(String id, String year, String month) {
+
+    return transactionRepository.getAllByCardIdAndYearAndMonth(id, year, month);
   }
 }
