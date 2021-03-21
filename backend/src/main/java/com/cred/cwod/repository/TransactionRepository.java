@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface TransactionRepository extends MongoRepository<CardStatement, String> {
 
   CardStatement getAllByCardIdAndYearAndMonth(String cardId, String year, String month);
+  CardStatement getByCardId(String cardId);
 }

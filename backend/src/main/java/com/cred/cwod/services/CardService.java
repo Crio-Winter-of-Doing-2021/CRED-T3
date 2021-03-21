@@ -3,12 +3,15 @@ package com.cred.cwod.services;
 import com.cred.cwod.dto.Card;
 import com.cred.cwod.dto.CardStatement;
 import com.cred.cwod.dto.Transaction;
+import com.cred.cwod.exchanges.PaymentRequest;
+import com.cred.cwod.exchanges.PaymentResponse;
 import com.cred.cwod.exchanges.StatementRequest;
 import com.cred.cwod.repository.CardRepository;
 import com.cred.cwod.repository.TransactionRepository;
 import com.cred.cwod.repository.UserRepository;
 import com.cred.cwod.utils.Status;
 import com.cred.cwod.utils.TransactionType;
+import com.cred.cwod.utils.Util;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -156,7 +159,7 @@ public class CardService implements BaseService {
       return null;
     }
 
-    CardStatement previousStatements = getCardStatement(id, year, month);
+    CardStatement previousStatements = transactionRepository.getByCardId(id);
     if (previousStatements != null) {
       transactionRepository.delete(previousStatements);
     }
@@ -195,5 +198,34 @@ public class CardService implements BaseService {
   public CardStatement getCardStatement(String id, String year, String month) {
 
     return transactionRepository.getAllByCardIdAndYearAndMonth(id, year, month);
+  }
+
+  public ResponseEntity<PaymentResponse> pay(String id, PaymentRequest paymentRequest) {
+    CardStatement currentStatement = transactionRepository.getByCardId(id);
+    if (currentStatement == null) {
+      return ResponseEntity.badRequest().body(new PaymentResponse(0, "CARD NOT FOUND"));
+    }
+
+    if (paymentRequest.getAmount() > currentStatement.getCurrentOutstanding()) {
+      return ResponseEntity.badRequest().body(new PaymentResponse(0, "AMOUNT GREATER THAN OUTSTANDING"));
+    }
+
+    transactionRepository.delete(currentStatement);
+
+    Integer currentOutstanding = currentStatement.getCurrentOutstanding();
+    // Add new transaction to the card statement.
+    Transaction newTransaction = Transaction.builder()
+        .date(Util.getCurrentDate())
+        .details("Card Payment by CRED")
+        .amount(paymentRequest.getAmount())
+        .transactionType(TransactionType.CREDIT)
+        .build();
+
+    currentStatement.setCurrentOutstanding(currentOutstanding - paymentRequest.getAmount());
+    currentStatement.getTransactions().add(newTransaction);
+
+    // Save the current updated statement
+    transactionRepository.save(currentStatement);
+    return ResponseEntity.ok(new PaymentResponse(paymentRequest.getAmount(), "PAID"));
   }
 }

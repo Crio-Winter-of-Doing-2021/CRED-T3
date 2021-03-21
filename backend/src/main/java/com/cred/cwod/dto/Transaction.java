@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @Builder
@@ -16,9 +16,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Transaction {
 
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  @NotNull
-  private LocalDate date;
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  @NotNull(message = "Date & Time of transaction must be in UTC")
+  private Date date;
 
   @NotNull
   private String details;

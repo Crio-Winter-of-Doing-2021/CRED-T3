@@ -2,9 +2,7 @@ package com.cred.cwod.controller;
 
 import com.cred.cwod.dto.Card;
 import com.cred.cwod.dto.CardStatement;
-import com.cred.cwod.exchanges.BaseResponse;
-import com.cred.cwod.exchanges.CardResponse;
-import com.cred.cwod.exchanges.StatementRequest;
+import com.cred.cwod.exchanges.*;
 import com.cred.cwod.services.CardService;
 import com.cred.cwod.services.MediaService;
 import io.swagger.annotations.ApiResponse;
@@ -26,6 +24,7 @@ public class CardController {
 
   public static final String CARD_BASE_URL = "/cards";
   public static final String STATEMENT_URL = "/{id}/statements/{year}/{month}";
+  public static final String MAKE_PAYMENT_URL = "/{id}/pay";
 
   private static final String DOC_TYPE = "pdf";
 
@@ -91,7 +90,7 @@ public class CardController {
   @PostMapping(CARD_BASE_URL + STATEMENT_URL)
   public ResponseEntity<CardStatement> addCardStatement(@PathVariable String id, @PathVariable String year,
                                                         @PathVariable String month,
-                                                        @RequestBody StatementRequest statement) {
+                                                        @Valid @RequestBody StatementRequest statement) {
     CardStatement response = cardService.updateCardStatement(id, year, month, statement);
 
     if (response == null) {
@@ -122,5 +121,18 @@ public class CardController {
     } else {
       return ResponseEntity.ok(response);
     }
+  }
+
+  /**
+   * TODO: Create API POST /cards/{id}/pay, to make payments for specific cards using it's id
+   *
+   *
+   */
+
+  @PostMapping(CARD_BASE_URL + MAKE_PAYMENT_URL)
+  public ResponseEntity<PaymentResponse> makePayment(@PathVariable String id, @Valid @RequestBody PaymentRequest paymentRequest) {
+    // Check if the card id is valid or not.
+    ResponseEntity<PaymentResponse> response = cardService.pay(id, paymentRequest);
+    return response;
   }
 }
