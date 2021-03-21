@@ -18,7 +18,6 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Card {
-
   @Id
   private String id;
 
