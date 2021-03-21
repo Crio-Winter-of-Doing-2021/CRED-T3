@@ -12,7 +12,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @Log4j2
-@EnableSwagger2
 @EnableConfigurationProperties({StorageProperties.class, Media.class})
 public class RunApplication {
 
