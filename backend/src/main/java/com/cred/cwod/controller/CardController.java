@@ -132,7 +132,6 @@ public class CardController {
   @PostMapping(CARD_BASE_URL + MAKE_PAYMENT_URL)
   public ResponseEntity<PaymentResponse> makePayment(@PathVariable String id, @Valid @RequestBody PaymentRequest paymentRequest) {
     // Check if the card id is valid or not.
-    ResponseEntity<PaymentResponse> response = cardService.pay(id, paymentRequest);
-    return response;
+    return cardService.pay(id, paymentRequest);
   }
 }
