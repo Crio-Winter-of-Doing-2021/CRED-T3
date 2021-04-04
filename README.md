@@ -9,3 +9,7 @@ Team ID: CRED-T3 | Team Members: [Aayush Mathur](https://github.com/aayush-mathu
 
 `Backend:` Java, Spring Boot, MongoDB Atlas
  
+## Deployments
+
+-frontend: https://cred-t3-client.herokuapp.com/
+-backend: https://cred-t3-backend.herokuapp.com/
