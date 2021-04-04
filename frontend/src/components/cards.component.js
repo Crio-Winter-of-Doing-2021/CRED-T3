@@ -47,30 +47,30 @@ export default class UserCards extends Component {
     const { cardList, isLoading, isEmpty } = this.state;
 
     if (isLoading) {
-        if (!isEmpty) {
-            return (
-                <div align="center">
-                  <h4>Fetching Cards...</h4>
-                  <div class="spinner-border"></div>
-                </div>
-              );
-        } else {
-            return (
-              <div>
-                <span>No Saved Cards</span>
-                <ButtonGroup style={{ marginLeft: "100px" }}>
-                  <Button
-                    size="sm"
-                    color="black"
-                    tag={Link}
-                    to={"/addCard/" + sessionStorage.getItem("userId")}
-                  >
-                    Add new card
-                  </Button>
-                </ButtonGroup>
-              </div>
-            );
-          }
+      if (!isEmpty) {
+        return (
+          <div align="center">
+            <h4>Fetching Cards...</h4>
+            <div class="spinner-border"></div>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <span>No Saved Cards</span>
+            <ButtonGroup style={{ marginLeft: "100px" }}>
+              <Button
+                size="sm"
+                color="black"
+                tag={Link}
+                to={"/addCard/" + sessionStorage.getItem("userId")}
+              >
+                Add new card
+              </Button>
+            </ButtonGroup>
+          </div>
+        );
+      }
     }
 
     const fetchedCards = cardList.map((card) => {

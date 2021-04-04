@@ -48,9 +48,9 @@ export default class AddCard extends Component {
     CardService.addCard(card).then(
       () => {
         this.setState({
-            success: true
+          success: true,
         });
-        
+
         this.props.history.push("/cards");
         window.location.reload();
       },
@@ -140,9 +140,7 @@ export default class AddCard extends Component {
             <div>
               {this.state.success && (
                 <div>
-                  <Alert color="success">
-                    Card added successfully!!
-                  </Alert>
+                  <Alert color="success">Card added successfully!!</Alert>
                 </div>
               )}
               {this.state.errorMessage && (
