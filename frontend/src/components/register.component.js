@@ -98,23 +98,26 @@ export default class Register extends Component {
         this.state.password
       ).then(
         response => {
+          this.props.history.push("/");
+          window.location.reload();
           this.setState({
             message: response.data.message,
             successfull: true
           });
         },
         error => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-
-          this.setState({
-            successfull: false,
-            message: resMessage
-          });
+          if (error.response) {
+            this.setState({
+              successfull: false,
+              message: 'Signup failed!'
+            });
+          } else {
+            this.setState({
+              successfull: false,
+              message: 'Server down!'
+            });
+          }
+          
         }
       );
     }
@@ -122,14 +125,12 @@ export default class Register extends Component {
 
   render() {
     return (
-      <div className="col-md-12">
-        <div className="card card-container">
-          <img
-            src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-            alt="profile-img"
-            className="profile-img-card"
-          />
-
+      <div>
+        <div align='center'>
+          <h4> Welcome to Cred</h4>
+          <span>Signup to continue</span>
+        </div>
+        <div>
           <Form
             onSubmit={this.handleRegister}
             ref={c => {

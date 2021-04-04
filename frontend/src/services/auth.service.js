@@ -1,15 +1,14 @@
 import axios from 'axios';
 import authHeader from './auth-header';
+import { config } from '../utils/constants';
 
-// http://credbackend-env.eba-i66gtx8n.ap-south-1.elasticbeanstalk.com
-
-export const API_URL = "http://localhost:5000";
+var BASE_API_URL = config.url.API_URL
 
 class AuthService {
 
     async login(username, password) {
         return axios
-            .post(API_URL + '/login', {
+            .post(BASE_API_URL + '/login', {
                 password,
                 username
             })
@@ -20,6 +19,14 @@ class AuthService {
                 console.log(sessionStorage.getItem('username'));
                 return response.headers.authorization;
             });
+    }
+
+    async register(username, email, password) {
+        return axios.post(BASE_API_URL + '/signup', {
+            username,
+            email,
+            password,
+        });
     }
 
     logout() {
@@ -37,7 +44,7 @@ class AuthService {
     }
 
     async getUserIdByUsername(username) {
-        await axios.get(API_URL + "/getUserId/" + username, {
+        await axios.get(BASE_API_URL + "/getUserId/" + username, {
             headers: authHeader()
         }).then(response => {
             sessionStorage.setItem('userId', response.data.data);
