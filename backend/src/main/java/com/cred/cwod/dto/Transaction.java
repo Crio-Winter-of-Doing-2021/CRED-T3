@@ -1,6 +1,8 @@
 package com.cred.cwod.dto;
 
 import com.cred.cwod.utils.TransactionType;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +20,7 @@ public class Transaction {
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   @NotNull(message = "Date & Time of transaction must be in UTC")
+  @JsonFormat(pattern = "yyy-MM-dd")
   private Date date;
 
   @NotNull
