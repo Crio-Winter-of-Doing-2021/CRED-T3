@@ -11,5 +11,5 @@ Team ID: CRED-T3 | Team Members: [Aayush Mathur](https://github.com/aayush-mathu
  
 ## Deployments
 
--frontend: https://cred-t3-client.herokuapp.com/
--backend: https://cred-t3-backend.herokuapp.com/
+- frontend: https://cred-t3-client.herokuapp.com/
+- backend: https://cred-t3-backend.herokuapp.com/
