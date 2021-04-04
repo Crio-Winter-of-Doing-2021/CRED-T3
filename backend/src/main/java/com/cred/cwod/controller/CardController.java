@@ -2,9 +2,11 @@ package com.cred.cwod.controller;
 
 import com.cred.cwod.dto.Card;
 import com.cred.cwod.dto.CardStatement;
+import com.cred.cwod.dto.User;
 import com.cred.cwod.exchanges.*;
 import com.cred.cwod.services.CardService;
 import com.cred.cwod.services.MediaService;
+import com.cred.cwod.services.UserService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.log4j.Log4j2;
@@ -32,7 +34,7 @@ public class CardController {
   private CardService cardService;
 
   @Autowired
-  private MediaService mediaService;
+  private UserService userService;
 
 
   @ApiResponses({
@@ -67,6 +69,31 @@ public class CardController {
   public ResponseEntity<CardResponse> getAllCardsByUserId(@PathVariable String userId) {
     CardResponse response = new CardResponse();
     List<Card> cards = cardService.getAllByUserId(userId);
+
+    if (cards != null && cards.size() > 0) {
+      response.setCards(cards);
+      return ResponseEntity.ok(response);
+    } else {
+      return ResponseEntity.badRequest().body(response);
+    }
+  }
+
+  @ApiResponses({
+      @ApiResponse(code = HttpServletResponse.SC_OK, message = "OK", response = CardResponse.class),
+      @ApiResponse(code = HttpServletResponse.SC_BAD_REQUEST, message = "Validation Error"),
+      @ApiResponse(code = HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message = "Server Error"),
+      @ApiResponse(code = HttpServletResponse.SC_FORBIDDEN, message = "Incorrect Credentials")
+  })
+  @GetMapping(CARD_BASE_URL + "/get" + "/{username}")
+  public ResponseEntity<CardResponse> getAllCardsByUsername(@PathVariable String username) {
+    CardResponse response = new CardResponse();
+    User foundUser = userService.findUserId(username);
+
+    if (foundUser == null) {
+      return ResponseEntity.badRequest().body(response);
+    }
+
+    List<Card> cards = cardService.getAllByUserId(foundUser.getId());
 
     if (cards != null && cards.size() > 0) {
       response.setCards(cards);
